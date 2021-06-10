@@ -277,6 +277,11 @@ simulate_population_harvest <- function(Linf,Linf_sd, M, Lorenzen, F, mincat, ca
 #	  corrected minimization error handling.
 #	Update Oct 5
 #	  corrected negative CV_L0 values
+#	Update June10 2021
+#	  If user does not specify Amax or age_max arguments, they will be taken from the sim_output object
+#	  If user specifies Amax or age_max, the specified value will be used with a message and a reminder of the value
+#		used in the sim_output object to notify the user whether the values match.
+
 # -------------------------------------------------------------------------------
 
 #  -----------------  arguments, typical values
@@ -305,7 +310,7 @@ simulate_population_harvest <- function(Linf,Linf_sd, M, Lorenzen, F, mincat, ca
 
 LH_sample <- function(sim_output, n_boots, samp_size, sample_type, supp_large = FALSE, supp_large_n_per_bin = 3, 
 					  supp_small = FALSE, supp_small_n_per_bin = 3, supp_min_length = 2, constrained = FALSE, 
-					  t0 = 0, SD_L_const = TRUE, save_bootstraps = FALSE, Amax, age_max, Lbin_width = 2) {
+					  t0 = 0, SD_L_const = TRUE, save_bootstraps = FALSE, Amax = NULL, age_max = NULL, Lbin_width = 2) {
 
 #  Preliminaries:
 #  Get system time
@@ -315,6 +320,24 @@ LH_sample <- function(sim_output, n_boots, samp_size, sample_type, supp_large = 
 #  define population_true and population_harvest
    	population_true <- sim_output$population	
    	population_harv <- sim_output$harvest			
+
+#  extract Amax and age_max from the sim_output
+#  if Amax and age_max are defined in LH_sample function arguments, use those but issue a message
+	if(!is.null(Amax)) {
+		print(paste("Amax is user specified =", Amax, sep=" "))
+		print(paste("Amax used in population simulation =", sim_output$parameters$Amax, sep=" "))
+			} else
+		{
+		Amax <- sim_output$parameters$Amax
+		}
+
+	if(!is.null(age_max)) {
+		print(paste("age_max is user specified =", age_max, sep=" "))
+		print(paste("age_max used in population simulation =", sim_output$parameters$age_max, sep=" "))
+			} else
+		{
+		age_max <- sim_output$parameters$age_max
+		}
 
 #  make empty lists to hold each of the things we are interested in:
    	list_boot_mods <- list()
