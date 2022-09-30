@@ -6,6 +6,17 @@ output:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# LHsampling
+
+## Overview
+Code to inform fishery dependent biological sampling from simulated fish populations and resulting catch using an individual based model.  For additional details see Schemmel et al 2022 (https://academic.oup.com/icesjms/article/79/5/1497/6581603).
+
+## Version Control Platform
+- Git
+
+## License
+See the [LICENSE.md](./LICENSE.md) for details
+
 
 
 <!-- Do not edit below. This adds the Disclaimer and NMFS footer. -->
