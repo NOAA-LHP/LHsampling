@@ -1,17 +1,28 @@
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- Do not edit below. This adds the Disclaimer and NMFS footer. -->
 
-# LHsampling
-
-## Overview
-Code to inform fishery dependent biological sampling from simulated fish populations and resulting catch using an individual based model.  For additional details see Schemmel et al 2022 (https://academic.oup.com/icesjms/article/79/5/1497/6581603).
-
-## Version Control Platform
-- Git
-
-## License
-See the [LICENSE.md](./LICENSE.md) for details
+------------------------------------------------------------------------
 
 ## Disclaimer
-This repository is a scientific product and is not official communication of the National Oceanic and Atmospheric Administration, or the United States Department of Commerce. All NOAA GitHub project code is provided on an ‘as is’ basis and the user assumes responsibility for its use. Any claims against the Department of Commerce or Department of Commerce bureaus stemming from the use of this GitHub project will be governed by all applicable Federal law. Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by the Department of Commerce. The Department of Commerce seal and logo, or the seal and logo of a DOC bureau, shall not be used in any manner to imply endorsement of any commercial product or activity by DOC or the United States Government.
 
-## Repository Access from NOAA Website
-This repository is also available as a [compressed backup file ([LHsammpling)]([https://pifsc-xfer.irc.noaa.gov/gitxfer/LHsampling.tar.gz]) on a publicly accessible website maintained by the Pacific Islands Fisheries Science Center (PIFSC) of the NOAA National Marine Fisheries Service (NMFS)
+The United States Department of Commerce (DOC) GitHub project code is
+provided on an ‘as is’ basis and the user assumes responsibility for its
+use. DOC has relinquished control of the information and no longer has
+responsibility to protect the integrity, confidentiality, or
+availability of the information. Any claims against the Department of
+Commerce stemming from the use of its GitHub project will be governed by
+all applicable Federal law. Any reference to specific commercial
+products, processes, or services by service mark, trademark,
+manufacturer, or otherwise, does not constitute or imply their
+endorsement, recommendation or favoring by the Department of Commerce.
+The Department of Commerce seal and logo, or the seal and logo of a DOC
+bureau, shall not be used in any manner to imply endorsement of any
+commercial product or activity by DOC or the United States Government.”
+
+------------------------------------------------------------------------
+
+<img src="https://raw.githubusercontent.com/nmfs-general-modeling-tools/nmfspalette/main/man/figures/noaa-fisheries-rgb-2line-horizontal-small.png" width="200" style="height: 75px !important;"  alt="NOAA Fisheries">
+
+[U.S. Department of Commerce](https://www.commerce.gov/) \| [National
+Oceanographic and Atmospheric Administration](https://www.noaa.gov) \|
+[NOAA Fisheries](https://www.fisheries.noaa.gov/)
