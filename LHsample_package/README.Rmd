@@ -1,0 +1,29 @@
+---
+output: 
+  md_document:
+    variant: gfm
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+
+
+<!-- Do not edit below. This adds the Disclaimer and NMFS footer. -->
+
+****
+
+```{r add-disclaimer, echo=FALSE, results='asis'}
+url <- "https://raw.githubusercontent.com/nmfs-fish-tools/Resources/master/Disclaimer.md"
+childtext <- readLines(url)
+cat(childtext, sep="\n")
+```
+
+****
+
+```{r footer, echo=FALSE, results='asis'}
+url <- "https://raw.githubusercontent.com/nmfs-fish-tools/Resources/master/footer.md" 
+childtext <- readLines(url)
+cat(childtext, sep="\n")
+```
+
+
