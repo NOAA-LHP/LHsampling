@@ -43,6 +43,10 @@ navbar:
       menu:
       - text: Full package documentation
         href: LH_Sampling_documentation.pdf
+      - text: Publication
+        href: Schemmel_An assessment of sampling approaches for estimating growth from fishery-dependent biological samples.pdf
+
+
 
 
 reference:
