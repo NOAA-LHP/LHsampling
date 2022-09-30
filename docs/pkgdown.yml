@@ -3,7 +3,7 @@ pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   LHsampling_vignette: LHsampling_vignette.html
-last_built: 2022-09-30T19:33Z
+last_built: 2022-09-30T19:47Z
 urls:
   reference: https://NOAA-LHP.github.io/LHsampling/reference
   article: https://NOAA-LHP.github.io/LHsampling/articles
