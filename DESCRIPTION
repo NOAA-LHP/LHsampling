@@ -2,7 +2,7 @@ Package: LHsampling
 Type: Package
 Title: Functions For Simulating Fish Populations And Estimating Life History Parameters
 Version: 0.1.0
-Authors@R: c(person("Eva", "Schemmel", , "eva.schemmel@noaa.gov", role = c("aut", "cre")), person("Erin", "Bohabouy", role="aut"))
+Authors@R: c(person("Eva", "Schemmel", , "eva.schemmel@noaa.gov", role = c("aut", "cre")), person("Erin", "Bohaboy", role="aut"))
 URL: https://github.com/NOAA-LHP/LHsampling/
 BugReports: https://github.com/NOAA-LHP/LHsampling/issues
 Reference: Eva Schemmel, Erin C Bohaboy, Michael J Kinney, Joseph M O'Malley, An assessment of sampling approaches for estimating growth from fishery-dependent biological samples, ICES Journal of Marine Science, Volume 79, Issue 5, July 2022, Pages 1497–1514, https://doi.org/10.1093/icesjms/fsac075
