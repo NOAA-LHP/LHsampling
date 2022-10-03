@@ -42,7 +42,7 @@ navbar:
       icon: fas fa-book fa-lg
       menu:
       - text: Full package documentation
-        href: LH_Sampling_documentation.pdf
+        href: LH_Sampling_manual.pdf
       - text: Publication
         href: Schemmel_An assessment of sampling approaches for estimating growth from fishery-dependent biological samples.pdf
 
@@ -59,6 +59,7 @@ reference:
   - contains ("LH_sample")
 - title: Data
   contents:
+  - contains("S1_Auric_lowF")
   - contains("S1")
 
 news:

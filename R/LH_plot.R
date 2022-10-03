@@ -9,6 +9,17 @@
 #'@param output_type How plots are written and saved: ‘none’ displays in R graphics device only, ’pdf’ produces a single .pdf with all plots, and ‘png' produces a separate .png for each plot.
 
 #'@keywords plot
+#'@details This function outputs plots to the R graphics device, requiring the user press [enter] in the R console to advance to the next plot. Users are encouraged to examine each plot to confirm the characteristics of the simulated population, fishing fleet, and bootstrap samples match expectations.
+
+#Plots:
+#Selectivity at length as specified in the initial population simulation
+#Natural mortality at age
+#Scatterplot of population length at age, overlaid with average length at age as expected from the von Bertalanffy growth parameters passed from simulate_population_harvest(). The scatterplot is limited to a random sample of 50,000 individuals from the population.
+#Histograms of frequency distributions for population length, harvest length, population age, and harvest age.
+#Histograms of number of individuals per length bin for 9 randomly chosen bootstrap samples.
+
+
+#'@example LH_plot(S1_A9, output_type = ‘pdf’)
 #'@export
 
 

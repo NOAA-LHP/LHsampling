@@ -24,6 +24,49 @@
 #'@param Amax Maximum longevity (years)
 #'@param age_max An arbitrary age selected to represent “old” fish (years)
 #'@param N The number of age 0 fish in each simulated cohort, typical value =100,000
+
+#'@example S1_Auric_lowF <- simulate_population_harvest(Linf = 32.5, Linf_sd = 2.5, M = 0.18, F = 0.09, Lorenzen = TRUE, mincat = 10, catsd = 2.5, maxcat = 200, maxcatsd = 0, L0 = 10, L0_sd = 2.5, k = 0.6, k_sd = 0, Amax = 32, age_max = 15, N = 100000)
+#'@details The individual-based simulation model begins with a cohort of N age 0 fish which progress through ages 0 to Amax following the Von Bertalanffy growth function for length at age (La) with individual-specific L∞ and L0 (length at age 0) parameters drawn from a normal distribution of mean = µ and standard deviation = σ [~N(µ, σ)].
+#L_(a,i)=L_(∞,i) (1-e^(-K_i (a-a_(0,i) ) ))
+#and
+#a_(0,i)=(Ln(1-L_(0,i)/L_(∞,i)))/K_i
+
+#L_(a,i) = predicted length (cm) of individual i at the end of age a (years)
+#L∞,i = asymptotic length (cm) of individual i
+#Ki = growth coefficient for individual i
+#a = age in years
+#a_0 = the theoretical age at which the fish would have zero length
+
+#It is important to note that fish enter the population simulation as age 0 fish, meaning they are at the end of their first year of life, about to turn 1 year old. At each age, individual fish are subject to death by natural mortality followed by death from harvest (fishing mortality) in a Bernoulli random process with probability pM,i or pF,i, for natural death or harvest, respectively. According to the Baranov catch equation (Quinn and Deriso, 1999), the probability of natural mortality at age a for fish i is
+#p_(M_(a,i) )=  M_(a,i)/(F_(a,i)+M_(a,i) ) (1-e^(-F_(a,i)-M_(a,i) ) )
+
+#where Ma,i is natural mortality at age a for fish i and is a function of individual length at age (La,i, calculated from the VBGF, below), following Lorenzen (Lorenzen, 2000; Lorenzen, 2005):
+
+#  M_(a,i)=M1/L_(a,i)
+
+#Parameter M1 describes the relationship between length and natural mortality in the overall population. M1 is estimated within the model by simultaneously solving the following set of equations:
+
+#  {■(M_a=M1/L_a @M_overall=〖-Ln(Survivorship)〗_Amax/A_max @〖Survivorship〗_Amax=N_Amax/N_0 =∏_(a=0)^(A_max)▒e^(-M_a ) =f(M_a,A_max,L_∞,L_0,k))}
+
+#where:
+#Ma = population expected natural mortality at age
+#La = population mean length at age
+#Moverall = population overall natural mortality
+#NAmax and N0 = expected number of fish in the population at ages Amax and 0.
+#SurvivorshipAmax = average probability of an individual surviving natural mortality to reach Amax.
+
+#The probability of fishing mortality (being harvested) at age a for fish i is
+
+#p_(F_(a,i) )=F_(a,i)/(F_(a,i)+M_(a,i) ) (1-e^(-F_(a,i)-M_(a,i) ) )
+
+#Where Fa,i is the fishing mortality at age a for fish i and is the product of apical (fully selected) fishing mortality (Fʹ) and selectivity at age conditioned on length (SelexL):
+
+#  F_(a,i) 〖=F*Selex〗_L
+
+#SelexL is modeled as the cumulative normal probability density of mean = mincat and standard deviation = mincatsd.
+
+#At each time step, individual fish that experience death by natural mortality are removed from the simulated cohort. Of the fish that survived natural mortality, the individuals that die by fishing mortality are removed from the simulated cohort and set aside as harvested fish. The fish that survived both natural and fishing mortality undergo Von Bertalanffy growth and advance to the next age. Amax + 1 cohorts are created and then 1 age (from a = 0 to Amax) is taken from the survivors and harvest of each cohort to form the simulated population and catch.
+
 #'@export
 
 simulate_population_harvest <- function(Linf,Linf_sd, M, Lorenzen, F, mincat, catsd, maxcat, maxcatsd,

@@ -4,6 +4,20 @@
 
 #'@usage LH_sample <- function(sim_output, n_boots, samp_size, sample_type, supp_large = FALSE, supp_large_n_per_bin = 3, supp_small = FALSE, supp_small_n_per_bin = 3, supp_min_length = 2, constrained = FALSE, t0 = 0, SD_L_const = TRUE, save_bootstraps = FALSE, Amax = NULL, age_max = NULL, Lbin_width = 2)
 #'@keywords function
+#'@details This function will take n_boots samples (without replacement) from the harvested individuals following either a fixed otolith sampling (FOS) or proportional otolith sampling (POS) strategy. The function then parameterizes the von Bertalanffy growth function and estimates the population coefficient of variation of length at age for each bootstrap sample.
+
+#To produce each FOS bootstrap, n individuals (calculated as total sample size, samp_size, divided by the number of length bins represented in the harvest, rounded up to the next integer) are randomly sampled, without replacement, from the harvest for each length bin. If less than n individuals are available in a harvest length bin, then additional samples are randomly drawn from the remaining length bins in the harvest until the total prescribed number of samples (n × number of length bins represented in the harvest) are attained. If greater than samp_size individuals have been collected, individuals within fully filled length bins will be randomly discarded from the sample until samp_size is attained. If supplemental sampling is being implemented (supp_large or supp_small = TRUE) then the specified number of samples per large (supp_large_n_per_bin) or small (supp_small_n_per_bin) are taken randomly (without replacement) from the population. For this step, ‘small’ and ‘large’ length bins are defined as any bins containing individuals in the population where fewer than supp_large_n_per_bin or supp_small_n_per_bin individuals in the FOS sample. After supplemental samples are added, individuals from the most populous length bins will be randomly discarded from the sample until samp_size is attained.
+#Each POS bootstrap is produced in much the same way as for FOS. The primary difference is the ‘target’ number n of individuals per length bin L (nL) is calculated based on the proportional distribution of lengths within the entire harvest, where nL is rounded to the nearest integer. If ∑▒〖n_(L )≠samp_size〗 then nL will be updated by adding or subtracting from the most populous length bin. Making adjustments to the number of samples targeted in the most populous length bin minimizes effects on the POS scheme from adjusting for the desired samp_size. For each POS bootstrap, nL individuals are randomly sampled, without replacement, from the harvest for each length bin. If supplemental sampling is being implemented (supp_large or supp_small = TRUE) then the specified number of samples per large (supp_large_n_per_bin) or small (supp_small_n_per_bin) are taken randomly (without replacement) from the population. For this step, ‘small’ and ‘large’ length bins are defined as any bins containing individuals in the population with fewer than  supp_large_n_per_bin or supp_small_n_per_bin in the POS sample. After supplemental samples are added, individuals from the non-supplemental length bins will be randomly discarded from the sample until samp_size is attained.
+#For each bootstrap sample, the coefficient of variation of length at age (CVa) is calculated (given ≥ 2 individuals per age). The coefficient of variation of length at age 0 (CVa0) and age_max (CVage_max) are extrapolated assuming a linear relationship between age and CVa (SD_L_const = FALSE) or standard deviation of length at age (SD_L_const = TRUE). The slope and intercept are parameterized using nls(). If nls() fails to converge, then the average variance in length at age, over all ages, is used.
+#For each bootstrap sample, the von Bertalanffy growth function is parameterized using nls(), with t0 (where t0 = a0 + 1) either estimated or fixed at the user specified value.
+
+#L_a=L_∞ (1-e^(-k(a-a_0 ) ))
+#and
+#a_0=(Ln(1-L_0/L_∞))/k
+
+#The total number of bootstrap samples for which nls() did not converge is reported out to the R console.
+
+
 
 #Paramaters for LH_sample()
 #'@param sim_output output from simulate_population_harvest()
@@ -21,6 +35,11 @@
 #'@param Amax Maximum longevity (years). If not specified, this value is taken from sim_output.
 #'@param age_max An arbitrary age selected to represent “old” fish (years). If not specified, this value is taken from sim_output.
 #'@param Lbin_width The width of each length bin (cm).
+
+#'@example S1_A9 <- LH_sample(sim_output = S1_Auric_lowF, n_boots = 1000, samp_size = 300, sample_type = 'POS', supp_large = FALSE, supp_small = FALSE, constrained = FALSE, save_bootstraps = TRUE,  Lbin_width = 2)
+
+
+
 #'@export
 
 
@@ -46,9 +65,9 @@
 
 #  -----------------  arguments, typical values
 #	sim_output <- S6_Auric_highF		# output of the simulate_population_harvest function
-#	n_boots <- 100			# number of bootstraps
+#	    n_boots <- 100			# number of bootstraps
 #   	samp_size <- 305			# sample size for each bootstrap
-#	sample_type <- 'POS'		# define as 'POS' or 'FOS'
+#	    sample_type <- 'POS'		# define as 'POS' or 'FOS'
 
 #   	supp_large <- FALSE		# do we want to supplement with large fish?
 #   	supp_large_n_per_bin <- 3	# number supplemental samples per large bin
