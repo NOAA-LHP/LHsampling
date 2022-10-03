@@ -164,11 +164,320 @@
 <span class="co">#&gt; Loading required package: ggplot2</span>
 <span class="co">#&gt; Loading required package: magrittr</span>
 <span class="co">#&gt; Loading required package: assertthat</span></code></pre></div>
+<p>Description: Functions for simulating fish populations and estimating
+life history parameters.</p>
+<p>URL: <a href="https://github.com/evaschemmel/LHsampling.git" class="external-link uri">https://github.com/evaschemmel/LHsampling.git</a></p>
+<p>Authors: Erin Bohaboy (<a href="mailto:erin.bohaboy@noaa.gov" class="email">erin.bohaboy@noaa.gov</a>) Eva Schemmel (<a href="mailto:eva.schemmel@noaa.gov" class="email">eva.schemmel@noaa.gov</a>)</p>
+<p>Updated: Oct 2022</p>
+<p>References: Schemmel E., Bohaboy E., Kinney M., O’Malley J. (2022) An
+assessment of sampling strategies for estimating fish growth from
+fishery-dependent samples. ICES Journal of Marine Science.</p>
+<p>Introduction: An individual-based model (IBM) incorporating
+within-population variability in von Bertalanffy growth,
+size-at-age-dependent natural mortality, and a size-selective fishery to
+simulate an exploited fish population and catch (harvest). A bootstrap
+algorithm allows the user to investigate various sampling approaches
+including sampling strategy (proportional or fixed otolith sampling, POS
+or FOS, respectively), sample size, supplementation with
+fishery-independent sampling, and assumptions regarding von Bertalanffy
+t0 and the relationship between variance of length at age and age. A
+function to produce plots of the bootstrap sampling results is also
+provided.</p>
+<p>Required packages: reshape, dplyr, ggplot2, magrittr, assertthat.</p>
+<hr>
+<div class="section level2">
+<h2 id="simulate_population_harvest-ibm-to-simulate-a-fish-population-and-catches-">simulate_population_harvest IBM to simulate a fish population and
+catches.<a class="anchor" aria-label="anchor" href="#simulate_population_harvest-ibm-to-simulate-a-fish-population-and-catches-"></a>
+</h2>
+<p>Description:</p>
+<p>An individual-based model (IBM) that simulates fish age and length
+values for a population and fishery harvest.</p>
+<p>Usage:</p>
+<p>simulate_population_harvest(Linf, Linf_sd, M, Lorenzen, F, mincat,
+catsd, maxcat, maxcatsd, L0, L0_sd, k, k_sd, Amax, age_max, N)</p>
+<p>Arguments:</p>
+<p>Linf Von Bertalanffy theoretical asymptotic length (cm)<br>
+Linf_sd Population standard deviation of asymptotic length (cm)<br>
+M Instantaneous natural mortality rate (yr-1)<br>
+Lorenzen TRUE / FALSE specifying whether natural mortality is a function
+of individual length following Lorenzen (Lorenzen, 2000; Lorenzen,
+2005)<br>
+F Apical (fully selected) instantaneous fishing mortality rate
+(yr-1)<br>
+mincat Minimum length at 50% fishery selectivity (cm)<br>
+catsd Slope of the ascending region of selectivity at length (cm), see
+details<br>
+maxcat Maximum length at 50% fishery selectivity (cm)<br>
+maxcatsd Slope of the descending region of selectivity at length (cm),
+see details<br>
+L0 Von Bertalanffy length at age 0 (cm)<br>
+L0_sd Population standard deviation of length at age 0 (cm)<br>
+k Von Bertalanffy growth coefficient<br>
+k_sd Population standard deviation of Von Bertalanffy growth
+coefficient<br>
+Amax Maximum longevity (years)<br>
+age_max An arbitrary age selected to represent “old” fish (years)<br>
+N The number of age 0 fish in each simulated cohort, typical value =
+100,000</p>
+<p>Details:</p>
+<p>The individual-based simulation model begins with a cohort of N age 0
+fish which progress through ages 0 to Amax following the Von Bertalanffy
+growth function for length at age (La) with individual-specific L∞ and
+L0 (length at age 0) parameters drawn from a normal distribution of mean
+= µ and standard deviation = σ [~N(µ, σ)].</p>
+<p><span class="math inline">\(L(a,i)=L(∞,i) (1-e^-Ki (a-a(0,i) )
+))\)</span></p>
+<p>and</p>
+<p><span class="math inline">\(a(0,i)=(Ln(1-L_(0,i)/L_(∞,i)))/K_i\)</span></p>
+<p>L_(a,i) = predicted length (cm) of individual i at the end of age a
+(years) L∞,i = asymptotic length (cm) of individual i Ki = growth
+coefficient for individual i a = age in years a_0 = the theoretical age
+at which the fish would have zero length</p>
+<p>It is important to note that fish enter the population simulation as
+age 0 fish, meaning they are at the end of their first year of life,
+about to turn 1 year old. At each age, individual fish are subject to
+death by natural mortality followed by death from harvest (fishing
+mortality) in a Bernoulli random process with probability pM,i or pF,i,
+for natural death or harvest, respectively. According to the Baranov
+catch equation (Quinn and Deriso, 1999), the probability of natural
+mortality at age a for fish i is <span class="math inline">\(p(M_(a,i)
+)= M(a,i)/(F(a,i)+M(a,i) ) (1-e^(-F(a,i)-M(a,i) ) )\)</span></p>
+<p>where Ma,i is natural mortality at age a for fish i and is a function
+of individual length at age (La,i, calculated from the VBGF, below),
+following Lorenzen (Lorenzen, 2000; Lorenzen, 2005):</p>
+<p><span class="math inline">\(M(a,i)=M1/L(a,i)\)</span></p>
+<p>Parameter M1 describes the relationship between length and natural
+mortality in the overall population. M1 is estimated within the model by
+simultaneously solving the following set of equations:</p>
+<p><img src="images/survivorship.png" width="600"></p>
+<p>where:</p>
+<p><span class="math inline">\(M_a\)</span> = population expected
+natural mortality at age</p>
+<p><span class="math inline">\(L_a\)</span> = population mean length at
+age</p>
+<p><span class="math inline">\(M_overall\)</span> = population overall
+natural mortality</p>
+<p><span class="math inline">\(N_Amax\)</span> and <span class="math inline">\(N_0\)</span> = expected number of fish in the
+population at ages <span class="math inline">\(A_max\)</span> and 0.</p>
+<p><span class="math inline">\(Survivorship_Amax\)</span> = average
+probability of an individual surviving natural mortality to reach <span class="math inline">\(A_max\)</span>.</p>
+<p>The probability of fishing mortality (being harvested) at age a for
+fish i is</p>
+<p><img src="images/Fa.png" width="600"></p>
+<p>Where Fa,i is the fishing mortality at age a for fish i and is the
+product of apical (fully selected) fishing mortality (Fʹ) and
+selectivity at age conditioned on length (<span class="math inline">\(Selex_L\)</span>):</p>
+<p><span class="math inline">\(F_(a,i) =F*Selex_L\)</span></p>
+<p><span class="math inline">\(Selex_L\)</span> is modeled as the
+cumulative normal probability density of mean = mincat and standard
+deviation = mincatsd.</p>
+<p>At each time step, individual fish that experience death by natural
+mortality are removed from the simulated cohort. Of the fish that
+survived natural mortality, the individuals that die by fishing
+mortality are removed from the simulated cohort and set aside as
+harvested fish. The fish that survived both natural and fishing
+mortality undergo Von Bertalanffy growth and advance to the next age.
+Amax + 1 cohorts are created and then 1 age (from a = 0 to Amax) is
+taken from the survivors and harvest of each cohort to form the
+simulated population and catch.</p>
+<p>Value:</p>
+<p>A named list:<br>
+$population (dataframe: $age, $length): the simulated population<br>
+$harvest (dataframe: $age, $length): the simulated harvest (i.e. catch
+for fisheries-dependent sampling)<br>
+$Avg_age (dataframe: $Ages, $L_age, $M_age, and $Selex): average
+characteristics of the simulated population at age<br>
+$parameters named list of 19 elements including all input parameters
+used in the simulation and the simulated population coefficient of
+variation of length at age_max and age_0</p>
+<p>Example:</p>
+<p>S1_Auric_lowF &lt;- simulate_population_harvest(Linf = 32.5, Linf_sd
+= 2.5, M = 0.18, F = 0.09, Lorenzen = TRUE, mincat = 10, catsd = 2.5,
+maxcat = 200, maxcatsd = 0, L0 = 10, L0_sd = 2.5, k = 0.6, k_sd = 0,
+Amax = 32, age_max = 15, N = 100000)</p>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="lh_sample-bootstrap-sampling-routine-to-estimate-life-history-parameters">LH_sample Bootstrap sampling routine to estimate life history
+parameters<a class="anchor" aria-label="anchor" href="#lh_sample-bootstrap-sampling-routine-to-estimate-life-history-parameters"></a>
+</h2>
+<p>Description:</p>
+<p>A bootstrap sampling routine to estimate life history parameters from
+fishery catches simulated by simulate_population_harvest().</p>
+<p>Usage:</p>
+<p>LH_sample &lt;- function(sim_output, n_boots, samp_size, sample_type,
+supp_large = FALSE, supp_large_n_per_bin = 3, supp_small = FALSE,
+supp_small_n_per_bin = 3, supp_min_length = 2, constrained = FALSE, t0 =
+0, SD_L_const = TRUE, save_bootstraps = FALSE, Amax = NULL, age_max =
+NULL, Lbin_width = 2)</p>
+<p>Arguments:</p>
+<p>sim_output Output from simulate_population_harvest()<br>
+n_boots Number of bootstrap samples to perform<br>
+samp_size Total sample size for each bootstrap<br>
+sample_type The sampling strategy to be used, either proportional
+otolith sampling (‘POS’) or fixed otolith sampling (‘FOS’)<br>
+supp_large TRUE / FALSE specifying whether supplemental samples will be
+collected from large length bins<br>
+supp_large_n_per_bin The number of samples per length bin to be
+collected from large bins (ignored if supp_large = FALSE)<br>
+supp_small TRUE / FALSE specifying whether supplemental samples will be
+collected from small length bins<br>
+supp_small_n_per_bin The number of samples per length bin to be
+collected from small bins (ignored if supp_small = FALSE)<br>
+supp_min_length The minimum length fish that could be collected from the
+wild fish population<br>
+constrained TRUE / FALSE specifying whether theoretical time at length
+zero (t0) should be estimated<br>
+t0 If constrained = TRUE, the fixed value for t0 (typically 0)<br>
+SD_L_const TRUE / FALSE describing assumptions of population variance in
+length at age. If TRUE, then standard deviation (√(σ^2 )) of length at
+age is assumed a linear function of age. If FALSE, then the coefficient
+of variation of length at age is assumed a linear function of age.<br>
+save_bootstraps TRUE / FALSE specifying whether all bootstrap samples
+will be included in the function output<br>
+Amax Maximum longevity (years). If not specified, this value is taken
+from sim_output.<br>
+age_max An arbitrary age selected to represent “old” fish (years). If
+not specified, this value is taken from sim_output.<br>
+Lbin_width The width of each length bin (cm).</p>
+<p>Details:</p>
+<p>This function will take n_boots samples (without replacement) from
+the harvested individuals following either a fixed otolith sampling
+(FOS) or proportional otolith sampling (POS) strategy. The function then
+parameterizes the von Bertalanffy growth function and estimates the
+population coefficient of variation of length at age for each bootstrap
+sample.</p>
+<p>To produce each FOS bootstrap, n individuals (calculated as total
+sample size, samp_size, divided by the number of length bins represented
+in the harvest, rounded up to the next integer) are randomly sampled,
+without replacement, from the harvest for each length bin. If less than
+n individuals are available in a harvest length bin, then additional
+samples are randomly drawn from the remaining length bins in the harvest
+until the total prescribed number of samples (n × number of length bins
+represented in the harvest) are attained. If greater than samp_size
+individuals have been collected, individuals within fully filled length
+bins will be randomly discarded from the sample until samp_size is
+attained. If supplemental sampling is being implemented (supp_large or
+supp_small = TRUE) then the specified number of samples per large
+(supp_large_n_per_bin) or small (supp_small_n_per_bin) are taken
+randomly (without replacement) from the population. For this step,
+‘small’ and ‘large’ length bins are defined as any bins containing
+individuals in the population where fewer than supp_large_n_per_bin or
+supp_small_n_per_bin individuals in the FOS sample. After supplemental
+samples are added, individuals from the most populous length bins will
+be randomly discarded from the sample until samp_size is attained.</p>
+<p>Each POS bootstrap is produced in much the same way as for FOS. The
+primary difference is the ‘target’ number n of individuals per length
+bin <span class="math inline">\(L (n_L)\)</span> is calculated based on
+the proportional distribution of lengths within the entire harvest,
+where nL is rounded to the nearest integer. If <span class="math inline">\(∑n_L ≠samp_size\)</span> then <span class="math inline">\(n_L\)</span> will be updated by adding or
+subtracting from the most populous length bin. Making adjustments to the
+number of samples targeted in the most populous length bin minimizes
+effects on the POS scheme from adjusting for the desired samp_size. For
+each POS bootstrap, nL individuals are randomly sampled, without
+replacement, from the harvest for each length bin. If supplemental
+sampling is being implemented (supp_large or supp_small = TRUE) then the
+specified number of samples per large (supp_large_n_per_bin) or small
+(supp_small_n_per_bin) are taken randomly (without replacement) from the
+population. For this step, ‘small’ and ‘large’ length bins are defined
+as any bins containing individuals in the population with fewer than
+supp_large_n_per_bin or supp_small_n_per_bin in the POS sample. After
+supplemental samples are added, individuals from the non-supplemental
+length bins will be randomly discarded from the sample until samp_size
+is attained.</p>
+<p>For each bootstrap sample, the coefficient of variation of length at
+age (CVa) is calculated (given ≥ 2 individuals per age). The coefficient
+of variation of length at age 0 (CVa0) and age_max (CVage_max) are
+extrapolated assuming a linear relationship between age and CVa
+(SD_L_const = FALSE) or standard deviation of length at age (SD_L_const
+= TRUE). The slope and intercept are parameterized using nls(). If nls()
+fails to converge, then the average variance in length at age, over all
+ages, is used.</p>
+<p>For each bootstrap sample, the von Bertalanffy growth function is
+parameterized using nls(), with t0 (where t0 = a0 + 1) either estimated
+or fixed at the user specified value.</p>
+<p><span class="math inline">\(L_a=L_∞ (1-e^(-k(a-a_0 ) ))\)</span></p>
+<p>and</p>
+<p><span class="math inline">\(a_0=(Ln(1-L_0/L_∞))/k\)</span></p>
+<p>The total number of bootstrap samples for which nls() did not
+converge is reported out to the R console.</p>
+<p>Value:</p>
+<p>A named list:<br><span class="math inline">\(list_boot_samps: list containing a dataframe
+(\)</span>age, $length, $binL, $n, $nbin) for each bootstrap sample.
+Will only contain data if save_bootstraps == TRUE.<br><span class="math inline">\(list_boot_preds: list containing a
+dataframes of predicted length at age (\)</span>age, $length) calculated
+from the fitted von Bertalanffy growth model for each bootstrap
+sample<br>
+$list_boot_mods: list containing nls() fitted model objects for each
+bootstrap sample<br>
+$list_boot_CVs: list containing a dataframe of calculated CV of length
+at age (if defined, $age, $CV_age) for each bootstrap sample<br>
+$list_boot_SDs: list containing a dataframe of calculated standard
+deviation at length (if defined, $age, $SD_age) for each bootstrap
+sample<br>
+$parameter_outputs: dataframe ($Linf, $K1, $a0, $CV_L_a0, $CV_L_age_max)
+of n_boots rows of the estimated von Bertalanffy growth parameters<br>
+$params_input_output: list of 17 elements including all input parameters
+and $boots_nls_fail, which is the total number of bootstrap samples for
+which nls() failed to converge for the von Bertalanffy growth
+function.<br>
+$simulation_params: list of 19 elements including all input parameters
+used in simulate_population_harvest() and the simulated population
+coefficient of variation of length at age_max and age_0. This element is
+passed directly from simulate_population_harvest().<br>
+$parameter_summary_all_boots: 95% confidence intervals, interquartile
+range, and arithmetic mean von Bertalanffy parameter estimates over all
+bootstraps (dataframe: $parm_name, $lower95, $lower50, $avg, $upper50,
+$upper95)<br>
+$list_some_boot_samps: list containing a dataframe for each of 9
+randomly selected bootstrap samples($age, $length, $binL, $n, $nbin)</p>
+<p>Example:</p>
+<p>S1_A9 &lt;- LH_sample(sim_output = S1_Auric_lowF, n_boots = 1000,
+samp_size = 300, sample_type = ‘POS’, supp_large = FALSE, supp_small =
+FALSE, constrained = FALSE, save_bootstraps = TRUE, Lbin_width = 2)</p>
+<hr>
+</div>
+<div class="section level2">
+<h2 id="lh_plot-produce-plots-from-an-lh_sample-object">LH_plot Produce plots from an LH_sample object<a class="anchor" aria-label="anchor" href="#lh_plot-produce-plots-from-an-lh_sample-object"></a>
+</h2>
+<p>Description:</p>
+<p>A function that produces plots from the output of LH_sample()</p>
+<p>Usage:</p>
+<p>LH_plot &lt;- function(sample_output, output_type = ‘none’)</p>
+<p>Arguments:</p>
+<p>sample_output Output from LH_sample() output_type How plots are
+written and saved: ‘none’ displays in R graphics device only, ‘pdf’
+produces a single .pdf with all plots, and ‘png’ produces a separate
+.png for each plot.</p>
+<p>Details:</p>
+<p>This function outputs plots to the R graphics device, requiring the
+user press [enter] in the R console to advance to the next plot. Users
+are encouraged to examine each plot to confirm the characteristics of
+the simulated population, fishing fleet, and bootstrap samples match
+expectations.</p>
+<p>Plots: Selectivity at length as specified in the initial population
+simulation Natural mortality at age Scatterplot of population length at
+age, overlaid with average length at age as expected from the von
+Bertalanffy growth parameters passed from simulate_population_harvest().
+The scatterplot is limited to a random sample of 50,000 individuals from
+the population. Histograms of frequency distributions for population
+length, harvest length, population age, and harvest age. Histograms of
+number of individuals per length bin for 9 randomly chosen bootstrap
+samples.</p>
+<p>Value:</p>
+<p>Files containing plots saved to the working directory [getwd()] if
+output_type = ‘pdf’ or ‘png’. File names will include system time as
+[YYYYMMDDhhmmss].</p>
+<p>Example:</p>
+<p>LH_plot(S1_A9, output_type = ‘pdf’)</p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 

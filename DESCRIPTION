@@ -10,7 +10,7 @@ Description: An individual-based model (IBM) incorporating within-population var
     and a size-selective fishery to simulate an exploited fish population and catch (harvest). A bootstrap algorithm allows the user to investigate 
     various sampling approaches including sampling strategy (proportional or fixed otolith sampling, POS or FOS, respectively), sample size, supplementation with fishery-independent sampling, and assumptions regarding von Bertalanffy t0 and the relationship between variance of length at age and age. A function to produce plots of the bootstrap sampling results is also provided.
 Depends: reshape, dplyr, ggplot2, magrittr, assertthat
-License: GPL-3 + file LICENSE
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.1

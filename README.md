@@ -1,4 +1,43 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# LHsampling
+
+An individual-based model (IBM) incorporating within-population
+variability in von Bertalanffy growth, size-dependent natural mortality,
+and a size-selective fishery to simulate an exploited fish population
+and catch (harvest). A bootstrap algorithm allows the user to
+investigate various sampling approaches including sampling strategy
+(proportional or fixed otolith sampling, POS or FOS, respectively),
+sample size, supplementation with fishery-independent sampling, and
+assumptions regarding von Bertalanffy t0 and the relationship between
+variance of length at age and age. A function to produce plots of the
+bootstrap sampling results is also provided.
+
+## Overview
+
+Code to inform fishery dependent biological sampling from simulated fish
+populations and resulting catch using an individual based model. For
+additional details see Schemmel et al 2022
+(<https://academic.oup.com/icesjms/article/79/5/1497/6581603>).
+
+## Version Control Platform
+
+-   Git
+
+## License
+
+See the [LICENSE.md](./LICENSE.md) for details
+
+## Installation
+
+Install the devtools package (if needed) and then use:
+
+library(devtools)
+
+devtools::install_github(“NOAA-LHP/LHsampling”)
+
+library(LHsampling)
+
 <!-- Do not edit below. This adds the Disclaimer and NMFS footer. -->
 
 ------------------------------------------------------------------------
