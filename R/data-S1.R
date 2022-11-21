@@ -15,4 +15,5 @@
 #' @references Schemmel E., Bohaboy E., Kinney M., O'Malley J. (2022) An assessment of sampling strategies for estimating fish growth from fishery-dependent samples.ICES 79(5):1497-1514
 #' @format list
 #' @keywords data
+#' @aliases S1_Auric_lowF
 NULL
